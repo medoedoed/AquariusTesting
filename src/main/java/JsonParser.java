@@ -1,8 +1,8 @@
 import handlers.ConfigHandler;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "jsonh", version = "0.0.1", mixinStandardHelpOptions = true)
-public class JsonHandler implements Runnable {
+@CommandLine.Command(name = "jsonp", version = "0.0.1", mixinStandardHelpOptions = true)
+public class JsonParser implements Runnable {
     @CommandLine.Parameters(index = "0", description = "path to config file")
     private String configPath;
 
@@ -10,7 +10,7 @@ public class JsonHandler implements Runnable {
     private int configId;
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(JsonHandler.class).execute(args);
+        int exitCode = new CommandLine(JsonParser.class).execute(args);
         System.exit(exitCode);
     }
 
