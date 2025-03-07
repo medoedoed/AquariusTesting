@@ -1,0 +1,34 @@
+{
+  "configurations": [
+    {
+      "id": 1,
+      "mode": "dir",
+      "path": "/home/medo/projects/AquariusTesting/testDir/dirWithFiles1",
+      "action": "string"
+    },
+    {
+      "id": 2,
+      "mode": "files",
+      "path": "/home/medo/projects/AquariusTesting/testDir/dirWithFiles2/file.csv, /home/medo/projects/AquariusTesting/testDir/dirWithFiles2/file2.csv, /home/medo/projects/AquariusTesting/testDir/dirWithFiles1/file.txt",
+      "action": "count"
+    },
+    {
+      "id": 3,
+      "mode": "dir",
+      "path": "/home/medo/projects/AquariusTesting/testDir/dirWithFiles3",
+      "action": "replace"
+    },
+    {
+      "id": 4,
+      "mode": "files",
+      "path": "/home/medo/projects/AquariusTesting/testDir/file1.txt, /home/medo/projects/AquariusTesting/testDir/file2.txt",
+      "action": "string"
+    },
+    {
+      "id": 5,
+      "mode": "dir",
+      "path": "/home/medo/projects/AquariusTesting/testDir/anotherDir",
+      "action": "count"
+    }
+  ]
+}
