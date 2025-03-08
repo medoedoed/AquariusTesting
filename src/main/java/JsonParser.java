@@ -1,3 +1,4 @@
+import actions.Action;
 import handlers.ConfigHandler;
 import logs.ErrorMessage;
 import picocli.CommandLine;
@@ -11,18 +12,17 @@ public class JsonParser implements Runnable {
     private int configId;
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(JsonParser.class).execute(args);
-        System.exit(exitCode);
+        new CommandLine(JsonParser.class).execute(args);
     }
 
     @Override
     public void run() {
         var configHandler = new ConfigHandler(configPath, configId);
-        System.out.println(System.getProperty("user.dir"));
         try {
             configHandler.handle();
         } catch (Exception e) {
             new ErrorMessage(e.getMessage()).send();
+//            System.exit(1);
         }
     }
 }

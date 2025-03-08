@@ -1,30 +1,34 @@
 package mods;
 
 
+import data.ConfigData;
 import logs.InfoMessage;
 
 import java.io.File;
+import java.util.Objects;
 
-public class DirectoryMode implements Mode {
-    private File directory;
-
-    public DirectoryMode(String pathsString, String action) {
-        GetDirectory(pathsString);
+public class DirectoryMode extends Mode {
+    public DirectoryMode(ConfigData configData, String action) {
+        GetFiles(configData.filesData().path());
+        this.configData = configData;
+        this.action = action;
     }
 
-    @Override
-    public void execute() {
-    }
-
-    public void GetDirectory(String directoryPath) {
+    private void GetFiles(String directoryPath) {
         File dir = new File(directoryPath);
 
         if (dir.exists() && dir.isDirectory()) {
-            this.directory = dir;
+            this.files.clear();
+            for (File file : Objects.requireNonNull(dir.listFiles())) {
+                if (file.isFile()) {
+                    this.files.add(file);
+                }
+            }
+            new InfoMessage("Found " + this.files.size()
+                    + " files in directory: " + directoryPath + '\n'
+                    + "Files: " + this.files).send();
         } else {
             throw new IllegalArgumentException("Invalid directory path: " + directoryPath);
         }
-
-        new InfoMessage("Directory Path: " + directoryPath).send();
     }
 }

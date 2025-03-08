@@ -1,31 +1,27 @@
 package mods;
 
+import data.ConfigData;
 import logs.InfoMessage;
 import logs.WarningMessage;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class FileMode implements Mode {
-    private final ArrayList<File> files = new ArrayList<>();
-
-    public FileMode(String pathsString, String action) {
-        getFiles(pathsString);
+public class FileMode extends Mode {
+    public FileMode(ConfigData configData, String action) {
+        getFiles(configData.filesData().path());
+        this.configData = configData;
+        this.action = action;
     }
 
-    @Override
-    public void execute() {
-        // TODO
-    }
-
-    private void getFiles(String pathsString) {
+    protected void getFiles(String pathsString) {
         String[] pathArray = pathsString.split(",");
-        files.clear();
+        this.files.clear();
 
         for (String path : pathArray) {
             File file = new File(path.trim());
             if (file.exists() && file.isFile() && file.canRead()) {
-                files.add(file);
+                this.files.add(file);
             } else {
                 new WarningMessage("Invalid or inaccessible file: " + path).send();
             }
@@ -35,7 +31,6 @@ public class FileMode implements Mode {
 //            throw new IllegalArgumentException("No valid files provided.");
 //        }
 
-        new InfoMessage("Files paths: " + files).send();
+        new InfoMessage("File paths: " + this.files).send();
     }
-
 }

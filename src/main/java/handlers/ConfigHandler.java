@@ -2,8 +2,11 @@ package handlers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import data.ConfigData;
+import data.FilesData;
 import mods.DirectoryMode;
 import mods.FileMode;
+import mods.ModsFactory;
 import picocli.CommandLine;
 
 import java.io.File;
@@ -20,8 +23,8 @@ public class ConfigHandler {
 
     public void handle() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        var root = mapper.readTree(new File(configPath));
-        var configurations = root.get("configurations");
+        JsonNode root = mapper.readTree(new File(configPath));
+        JsonNode configurations = root.get("configurations");
 
         if (configurations == null || !configurations.isArray()) {
             throw new IllegalArgumentException("Wrong configuration JSON");
@@ -29,29 +32,19 @@ public class ConfigHandler {
 
         for (JsonNode config : configurations) {
             if (config.get("id").asInt() == configId) {
-                var mode = config.get("mode").asText();
-                var paths = config.get("path").asText();
-                var action = config.get("action").asText();
+                final String mode = config.get("mode").asText();
+                final String path = config.get("path").asText();
+                final String action = config.get("action").asText();
+                final var configData = new ConfigData(
+                        configPath,
+                        configId,
+                        new FilesData(mode, path));
 
-                callMode(mode, paths, action);
-
+                ModsFactory.getInstance().getMode(configData, action).execute();
                 return;
             }
         }
 
         throw new IllegalArgumentException("Configuration ID " + configId + " not found");
-    }
-
-    private void callMode(String mode, String paths, String action) {
-        switch (mode) {
-            case "dir":
-                new DirectoryMode(paths, action).execute();
-            case "files":
-                new FileMode(paths, action).execute();
-                break;
-            default:
-                throw new IllegalArgumentException("Unexpected mode value: " + mode);
-        }
-
     }
 }
