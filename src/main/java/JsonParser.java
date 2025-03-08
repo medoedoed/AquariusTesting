@@ -1,4 +1,5 @@
 import handlers.ConfigHandler;
+import logs.ErrorMessage;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "jsonp", version = "0.0.1", mixinStandardHelpOptions = true)
@@ -17,11 +18,11 @@ public class JsonParser implements Runnable {
     @Override
     public void run() {
         var configHandler = new ConfigHandler(configPath, configId);
-
+        System.out.println(System.getProperty("user.dir"));
         try {
             configHandler.handle();
         } catch (Exception e) {
-            System.err.println("[ERROR]: " + e.getMessage());
+            new ErrorMessage(e.getMessage()).send();
         }
     }
 }

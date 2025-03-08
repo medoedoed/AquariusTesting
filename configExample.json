@@ -3,31 +3,31 @@
     {
       "id": 1,
       "mode": "dir",
-      "path": "/home/medo/projects/AquariusTesting/testDir/dirWithFiles1",
+      "path": "./testDir/dirWithFiles1",
       "action": "string"
     },
     {
       "id": 2,
       "mode": "files",
-      "path": "/home/medo/projects/AquariusTesting/testDir/dirWithFiles2/file.csv, /home/medo/projects/AquariusTesting/testDir/dirWithFiles2/file2.csv, /home/medo/projects/AquariusTesting/testDir/dirWithFiles1/file.txt",
+      "path": "./testDir/dirWithFiles2/file.csv, ./testDir/dirWithFiles2/file2.csv, ./testDir/dirWithFiles1/file.txt",
       "action": "count"
     },
     {
       "id": 3,
       "mode": "dir",
-      "path": "/home/medo/projects/AquariusTesting/testDir/dirWithFiles3",
+      "path": "./testDir/dirWithFiles3",
       "action": "replace"
     },
     {
       "id": 4,
       "mode": "files",
-      "path": "/home/medo/projects/AquariusTesting/testDir/file1.txt, /home/medo/projects/AquariusTesting/testDir/file2.txt",
+      "path": "./testDir/file1.txt, ./testDir/file2.txt, ./testDir/wrongFile.txt",
       "action": "string"
     },
     {
       "id": 5,
       "mode": "dir",
-      "path": "/home/medo/projects/AquariusTesting/testDir/anotherDir",
+      "path": "./testDir/anotherDir",
       "action": "count"
     }
   ]

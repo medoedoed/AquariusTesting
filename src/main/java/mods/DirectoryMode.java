@@ -1,15 +1,30 @@
 package mods;
 
-import java.io.File;
-import java.util.ArrayList;
 
-public class DirectoryMode extends Mode {
+import logs.InfoMessage;
+
+import java.io.File;
+
+public class DirectoryMode implements Mode {
+    private File directory;
+
     public DirectoryMode(String pathsString, String action) {
-        getPaths(pathsString);
+        GetDirectory(pathsString);
     }
 
     @Override
     public void execute() {
-        System.out.println(paths);
+    }
+
+    public void GetDirectory(String directoryPath) {
+        File dir = new File(directoryPath);
+
+        if (dir.exists() && dir.isDirectory()) {
+            this.directory = dir;
+        } else {
+            throw new IllegalArgumentException("Invalid directory path: " + directoryPath);
+        }
+
+        new InfoMessage("Directory Path: " + directoryPath).send();
     }
 }

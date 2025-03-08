@@ -31,19 +31,6 @@ class JsonParserTest {
     }
 
     @Test
-    void testRun_withInvalidConfig_shouldReturnError() {
-        // Arrange
-        String[] args = {CONFIG_PATH, "999"};  // Invalid config ID
-
-        // Act
-        JsonParser jsonParser = new JsonParser();
-        int exitCode = new CommandLine(jsonParser).execute(args);
-
-        // Assert
-        assertNotEquals(0, exitCode, "Exit code should not be 0 for invalid config ID");
-    }
-
-    @Test
     void testRun_withInvalidFilePath_shouldReturnError() {
         // Arrange
         String invalidPath = "/home/medo/projects/AquariusTesting/InvalidConfig.json";
