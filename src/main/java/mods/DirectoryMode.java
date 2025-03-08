@@ -8,10 +8,11 @@ import java.io.File;
 import java.util.Objects;
 
 public class DirectoryMode extends Mode {
-    public DirectoryMode(ConfigData configData, String action) {
+    public DirectoryMode(ConfigData configData, String action, String savePath) {
         GetFiles(configData.filesData().path());
         this.configData = configData;
         this.action = action;
+        this.savePath = savePath;
     }
 
     private void GetFiles(String directoryPath) {
@@ -24,9 +25,9 @@ public class DirectoryMode extends Mode {
                     this.files.add(file);
                 }
             }
-            new InfoMessage("Found " + this.files.size()
+            InfoMessage.send("Found " + this.files.size()
                     + " files in directory: " + directoryPath + '\n'
-                    + "Files: " + this.files).send();
+                    + "Files: " + this.files);
         } else {
             throw new IllegalArgumentException("Invalid directory path: " + directoryPath);
         }

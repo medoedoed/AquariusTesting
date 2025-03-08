@@ -4,21 +4,20 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import data.ConfigData;
 import data.FilesData;
-import mods.DirectoryMode;
-import mods.FileMode;
 import mods.ModsFactory;
-import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
 
 public class ConfigHandler {
-    private String configPath;
-    private int configId;
+    private final String configPath;
+    private final int configId;
+    private final String savePath;
 
-    public ConfigHandler(String configPath, int configId) {
+    public ConfigHandler(String configPath, int configId, String savePath) {
         this.configPath = configPath;
         this.configId = configId;
+        this.savePath = savePath;
     }
 
     public void handle() throws IOException {
@@ -40,7 +39,7 @@ public class ConfigHandler {
                         configId,
                         new FilesData(mode, path));
 
-                ModsFactory.getInstance().getMode(configData, action).execute();
+                ModsFactory.getInstance().getMode(configData, action, savePath).execute();
                 return;
             }
         }

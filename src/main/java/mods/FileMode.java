@@ -5,13 +5,13 @@ import logs.InfoMessage;
 import logs.WarningMessage;
 
 import java.io.File;
-import java.util.ArrayList;
 
 public class FileMode extends Mode {
-    public FileMode(ConfigData configData, String action) {
+    public FileMode(ConfigData configData, String action, String savePath) {
         getFiles(configData.filesData().path());
         this.configData = configData;
         this.action = action;
+        this.savePath = savePath;
     }
 
     protected void getFiles(String pathsString) {
@@ -23,7 +23,7 @@ public class FileMode extends Mode {
             if (file.exists() && file.isFile() && file.canRead()) {
                 this.files.add(file);
             } else {
-                new WarningMessage("Invalid or inaccessible file: " + path).send();
+                WarningMessage.send("Invalid or inaccessible file: " + path);
             }
         }
 
@@ -31,6 +31,6 @@ public class FileMode extends Mode {
 //            throw new IllegalArgumentException("No valid files provided.");
 //        }
 
-        new InfoMessage("File paths: " + this.files).send();
+        InfoMessage.send("File paths: " + this.files);
     }
 }

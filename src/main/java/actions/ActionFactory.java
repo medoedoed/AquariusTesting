@@ -1,8 +1,10 @@
 package actions;
 
+import data.ConfigData;
 import logs.InfoMessage;
-import mods.DirectoryMode;
-import mods.FileMode;
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class ActionFactory {
     private static final ActionFactory instance = new ActionFactory();
@@ -13,13 +15,13 @@ public class ActionFactory {
         return instance;
     }
 
-    public Action getAction(String action) {
-        new InfoMessage("Current action: " + action).send();
+    public Action getAction(String action, ConfigData configData, ArrayList<File> files, String savePath) {
+        InfoMessage.send("Current action: " + action);
 
         return switch (action) {
-            case "string" -> new StringAction();
-            case "count" -> new CountAction();
-            case "replace" -> new ReplaceAction();
+            case "string" -> new StringAction(configData, files, savePath);
+            case "count" -> new CountAction(configData, files, savePath);
+            case "replace" -> new ReplaceAction(configData, files, savePath);
             default -> throw new IllegalArgumentException("Unexpected action value: " + action);
         };
     }

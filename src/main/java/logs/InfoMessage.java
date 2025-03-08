@@ -2,13 +2,18 @@ package logs;
 
 public class InfoMessage extends Message {
     private static final String ANSI_BLUE = "\u001B[34m";
+    private static boolean isActive = true;
 
-    public InfoMessage(String messageBody) {
-        super(messageBody);
+    public static void disable() {
+        isActive = false;
     }
 
-    @Override
-    public void send() {
-        printToConsole("[INFO]: " + this.messageBody, ANSI_BLUE);
+    public static void enable() {
+        isActive = false;
+    }
+  
+    public static void send(String messageBody) {
+        if (!isActive) return;
+        printToConsole("[INFO]: " + messageBody, ANSI_BLUE);
     }
 }

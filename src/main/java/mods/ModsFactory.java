@@ -13,14 +13,14 @@ public class ModsFactory {
         return instance;
     }
 
-    public Mode getMode(ConfigData configData, String action) {
+    public Mode getMode(ConfigData configData, String action, String savePath) {
         final String modeName = configData.filesData().mode();
 
-        new InfoMessage("Current mode value: " + modeName).send();
+        InfoMessage.send("Current mode value: " + modeName);
 
         return switch (modeName) {
-            case "dir" -> new DirectoryMode(configData, action);
-            case "files" -> new FileMode(configData, action);
+            case "dir" -> new DirectoryMode(configData, action, savePath);
+            case "files" -> new FileMode(configData, action, savePath);
             default -> throw new IllegalArgumentException("Unexpected mode value: " + modeName);
         };
     }

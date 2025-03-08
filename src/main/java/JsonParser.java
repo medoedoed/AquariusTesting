@@ -1,4 +1,3 @@
-import actions.Action;
 import handlers.ConfigHandler;
 import logs.ErrorMessage;
 import picocli.CommandLine;
@@ -11,17 +10,20 @@ public class JsonParser implements Runnable {
     @CommandLine.Parameters(index = "1", description = "config ID")
     private int configId;
 
+    @CommandLine.Option(names = {"-p", "--path"}, description = "path to save json")
+    private String savePath;
+
     public static void main(String[] args) {
         new CommandLine(JsonParser.class).execute(args);
     }
 
     @Override
     public void run() {
-        var configHandler = new ConfigHandler(configPath, configId);
+        var configHandler = new ConfigHandler(configPath, configId, savePath);
         try {
             configHandler.handle();
         } catch (Exception e) {
-            new ErrorMessage(e.getMessage()).send();
+            ErrorMessage.send(e.getMessage());
 //            System.exit(1);
         }
     }

@@ -2,13 +2,18 @@ package logs;
 
 public class WarningMessage extends Message {
     private static final String ANSI_ORANGE = "\u001B[38;5;214m";
+    private static boolean isActive = true;
 
-    public WarningMessage(String messageBody) {
-        super(messageBody);
+    public static void disable() {
+        isActive = false;
     }
 
-    @Override
-    public void send() {
-        printToConsole("[WARNING]: " + this.messageBody, ANSI_ORANGE);
+    public static void enable() {
+        isActive = false;
+    }
+    public static void send(String messageBody) {
+        if (!isActive) return;
+
+        printToConsole("[WARNING]: " + messageBody, ANSI_ORANGE);
     }
 }
