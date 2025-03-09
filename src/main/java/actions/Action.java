@@ -2,7 +2,6 @@ package actions;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import data.ConfigData;
 import logs.InfoMessage;
@@ -19,66 +18,87 @@ public abstract class Action {
     protected ObjectNode root;
     protected final ArrayList<File> files;
     protected final ConfigData configData;
-    protected File savePath = new File("");
+    protected File outputFile;
 
-    private static final String CONFIG_FILE_NAME = "config.json";
+    protected static final String DEFAULT_OUTPUT_DIRECTORY = ".";
+    protected static final String DEFAULT_OUTPUT_NAME = "output.json";
+
 
     protected Action(ConfigData configData, ArrayList<File> files, String savePath) {
         this.files = files;
         this.configData = configData;
-        setDirectory(savePath);
+        try {
+            setFilePath(savePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected void createHeader(ConfigData configData) {
         ObjectMapper objectMapper = new ObjectMapper();
-        root = objectMapper.valueToTree(configData);
+        root = objectMapper.createObjectNode();
+
+        root.put("configFile", configData.configFile());
+        root.put("configurationID", configData.configId());
+
+        ObjectNode configNode = objectMapper.valueToTree(configData);
+        root.set("configurationData", configNode);
     }
 
     protected void saveJson() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writerWithDefaultPrettyPrinter()
-                .writeValue(new File(this.savePath + File.separator + CONFIG_FILE_NAME), root);
-        System.out.println("Json saved to " + this.savePath.getAbsolutePath() + File.separator + CONFIG_FILE_NAME);
+
+        File parentDir = outputFile.getParentFile();
+        if (parentDir != null && !parentDir.exists()) {
+            parentDir.mkdirs();
+        }
+
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(outputFile, root);
+        System.out.println("Json saved to " + outputFile.getCanonicalPath());
     }
 
-    protected void setDirectory(String savePath) {
-        if (savePath == null) {
-            InfoMessage.send("Json save directory set to default: " + this.savePath.getAbsolutePath());
+    protected void setFilePath(String savePath) throws IOException {
+
+        if (savePath == null || savePath.isBlank()) {
+            this.outputFile = new File(DEFAULT_OUTPUT_DIRECTORY + File.separator + DEFAULT_OUTPUT_NAME);
+            WarningMessage.send("No file path provided. Using default: " +
+                    this.outputFile.getCanonicalFile());
             return;
         }
 
-        File path = new File(savePath);
-        if (!path.exists()) {
-            WarningMessage.send("Json save directory does not exist: " + savePath +
-                    "\nDirectory will be set to default: " + this.savePath.getAbsolutePath());
+        File file = new File(savePath);
+
+        if (file.exists() && file.isDirectory()) {
+            this.outputFile = new File(file.getAbsoluteFile() + File.separator + DEFAULT_OUTPUT_NAME);
             return;
         }
 
-        if (!path.isDirectory()) {
-            WarningMessage.send("Provided path is not a directory: " + path.getAbsolutePath());
-            return;
+        if (file.exists() && file.isFile()) {
+            throw new IllegalArgumentException("File already exists: " + file.getCanonicalPath());
         }
 
-        InfoMessage.send("Json save directory set to " + path.getAbsolutePath());
-
-        this.savePath = path;
+        this.outputFile = file;
+        InfoMessage.send("Json will be saved as: " + this.outputFile.getAbsolutePath());
     }
+
+
 
     public void makeJson() throws IOException {
         createHeader(configData);
 
-        ArrayNode outArray = this.root.putArray("out");
-        List<BufferedReader> readers = new ArrayList<>();
+        ObjectNode outNode = root.putObject("out");
 
-        for (int i = 0; i < files.size(); i++) {
-            readers.add(new BufferedReader(new FileReader(files.get(i))));
+        List<BufferedReader> readers = new ArrayList<>();
+        for (File file : files) {
+            readers.add(new BufferedReader(new FileReader(file)));
         }
 
         boolean hasData = false;
+        int lineIndex = 1;
 
         try {
             while (true) {
-                ArrayNode lineArray = outArray.addArray();
+                ObjectNode lineNode = outNode.putObject(String.valueOf(lineIndex));
                 boolean hasNonEmptyLine = false;
 
                 for (int i = 0; i < readers.size(); i++) {
@@ -86,16 +106,17 @@ public abstract class Action {
                     if (line != null) {
                         hasNonEmptyLine = true;
                         hasData = true;
-                        lineArray.add(processLine(line, i + 1));
+                        lineNode.set(String.valueOf(i + 1), processLine(line, i));
                     } else {
-                        lineArray.add(getDefaultValue());
+                        lineNode.set(String.valueOf(i + 1), getDefaultValue());
                     }
                 }
 
                 if (!hasNonEmptyLine) {
-                    outArray.remove(outArray.size() - 1);
+                    outNode.remove(String.valueOf(lineIndex));
                     break;
                 }
+                lineIndex++;
             }
 
             if (!hasData) {

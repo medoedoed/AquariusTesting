@@ -29,8 +29,7 @@ public class DirectoryMode extends Mode {
 
             files.sort(Comparator.comparing(File::getName));
             InfoMessage.send("Found " + this.files.size()
-                    + " files in directory: " + directoryPath + '\n'
-                    + "Files: " + this.files);
+                    + " files in directory: " + directoryPath);
             return;
         }
 

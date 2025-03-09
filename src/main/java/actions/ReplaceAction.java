@@ -19,7 +19,7 @@ public class ReplaceAction extends Action {
         for (char ch : line.toCharArray()) {
             if (Character.isLetter(ch)) {
                 int charIndex = Character.toLowerCase(ch) - 'a' + 1;
-                replacedLine.append(charIndex + fileIndex);
+                replacedLine.append(charIndex + fileIndex + 1);
             } else {
                 replacedLine.append(ch);
             }
