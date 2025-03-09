@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'ru.medoed'
@@ -10,14 +11,34 @@ repositories {
 }
 
 dependencies {
-    implementation('info.picocli:picocli:4.7.6')
+    implementation 'info.picocli:picocli:4.7.6'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
-    implementation('com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.15.2')
-    implementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2')
-
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.15.2'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+tasks {
+    jar {
+        manifest {
+            attributes(
+                    'Main-Class': 'JsonParser'
+            )
+        }
+    }
+
+    shadowJar {
+        archiveFileName.set("jsonp.jar")
+        mergeServiceFiles()
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 test {
