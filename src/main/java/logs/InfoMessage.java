@@ -2,15 +2,6 @@ package logs;
 
 public class InfoMessage extends Message {
     private static final String ANSI_BLUE = "\u001B[34m";
-    private static boolean isActive = true;
-
-    public static void disable() {
-        isActive = false;
-    }
-
-    public static void enable() {
-        isActive = false;
-    }
   
     public static void send(String messageBody) {
         if (!isActive) return;

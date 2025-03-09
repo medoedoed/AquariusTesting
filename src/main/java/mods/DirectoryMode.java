@@ -5,6 +5,7 @@ import data.ConfigData;
 import logs.InfoMessage;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class DirectoryMode extends Mode {
@@ -25,11 +26,14 @@ public class DirectoryMode extends Mode {
                     this.files.add(file);
                 }
             }
+
+            files.sort(Comparator.comparing(File::getName));
             InfoMessage.send("Found " + this.files.size()
                     + " files in directory: " + directoryPath + '\n'
                     + "Files: " + this.files);
-        } else {
-            throw new IllegalArgumentException("Invalid directory path: " + directoryPath);
+            return;
         }
+
+        throw new IllegalArgumentException("Invalid directory path: " + directoryPath);
     }
 }

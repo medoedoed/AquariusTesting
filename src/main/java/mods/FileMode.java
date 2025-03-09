@@ -5,6 +5,7 @@ import logs.InfoMessage;
 import logs.WarningMessage;
 
 import java.io.File;
+import java.util.Comparator;
 
 public class FileMode extends Mode {
     public FileMode(ConfigData configData, String action, String savePath) {
@@ -31,6 +32,7 @@ public class FileMode extends Mode {
 //            throw new IllegalArgumentException("No valid files provided.");
 //        }
 
+        files.sort(Comparator.comparing(File::getName));
         InfoMessage.send("File paths: " + this.files);
     }
 }

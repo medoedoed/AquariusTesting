@@ -9,7 +9,7 @@ public class ErrorMessage extends Message {
     }
 
     public static void enable() {
-        isActive = false;
+        isActive = true;
     }
 
     public static void send(String messageBody) {
